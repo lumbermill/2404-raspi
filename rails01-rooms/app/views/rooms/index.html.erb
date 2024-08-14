@@ -4,13 +4,16 @@
 
 <h1>Rooms</h1>
 
-<div id="rooms">
+<table id="rooms" class="table">
   <% @rooms.each do |room| %>
-    <%= render room %>
-    <p>
+    <tr>
+      <td><%= room.name %></td>
+      <td><%= room.occupied %></td>
+      <td>
       <%= link_to "Show this room", room %>
-    </p>
+      </td>
+    </tr>
   <% end %>
-</div>
+</table>
 
 <%= link_to "<i class='bi bi-plus-square'></i> New room".html_safe, new_room_path, class: "btn btn-light" %>
