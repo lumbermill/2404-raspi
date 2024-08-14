@@ -1,0 +1,15 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @room %>
+
+<p>How to update the occupation of a room using curl:</p>
+<pre>
+curl http://<%= request.server_name %>:3000/rooms/update-occupation -XGET -d 'name=<%= @room.name %>&occupied=true'
+</pre>
+
+<div>
+  <%= link_to "Edit this room", edit_room_path(@room) %> |
+  <%= link_to "Back to rooms", rooms_path %>
+
+  <%= button_to "Destroy this room", @room, method: :delete %>
+</div>
