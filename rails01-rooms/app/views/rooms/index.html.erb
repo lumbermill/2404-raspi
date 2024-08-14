@@ -1,5 +1,4 @@
 <p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Rooms" %>
 
 <h1>Rooms</h1>
@@ -8,7 +7,13 @@
   <% @rooms.each do |room| %>
     <tr>
       <td><%= room.name %></td>
-      <td><%= room.occupied %></td>
+      <td>
+        <% if room.occupied %>
+          <div class="alert alert-danger">occupied</div>
+        <% else %>
+          <div class="alert alert-success">vacant</div>
+        <% end %>
+      </td>
       <td>
       <%= link_to "Show this room", room %>
       </td>
