@@ -1,24 +1,6 @@
-# README
+# carpool
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The actual implementation is going under tachibana(another internal) project.
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+The content will be copied after completing the basic implementation. 
+Til then, be aware that it is not the perfect example.
