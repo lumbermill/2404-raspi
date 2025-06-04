@@ -8,3 +8,21 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+div.car-count {
+    font-size: 120px;
+    margin: 10px;
+    background-color: lightsalmon;
+    border-radius: 20px;
+}
+
+div#cars {
+    display: flex;
+    overflow: scroll;
+}
+
+div#cars img{
+    width: 200px;
+    border-radius: 8px;
+    margin-right: 8px;
+}

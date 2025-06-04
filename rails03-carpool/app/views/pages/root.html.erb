@@ -1,0 +1,17 @@
+
+<h1>Carpool</h1>
+<div class="my-4 text-center">
+  <div class="car-count">
+    <%= @car_count || 0 %>
+  </div>
+</div>
+
+
+<div id="cars">
+<% @pictures.each do |pic| %>
+  <figure>
+  <a href="pictures/<%= pic %>" target="_blank"><img src="pictures/<%= pic %>" alt="" /></a>
+  <figcaption><%= pic %></figcaption>
+  </figure>
+<% end %>
+</div>
