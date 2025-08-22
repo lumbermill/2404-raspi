@@ -6,8 +6,9 @@ class PagesController < ApplicationController
   end
 
   def update
+    ActionCable.server.broadcast "notification_channel"
     # This action is used to check if the application is running properly.
-    # It should return a 200 status code if everything is fine.
+    # It should return a 200 status code if everything is fine. => who is using this?
     head :ok
   end
 end
