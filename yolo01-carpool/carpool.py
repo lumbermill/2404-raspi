@@ -1,6 +1,6 @@
 import cv2, numpy, math, os, time
 
-storage = os.path.expanduser('~/carpool/storage')
+storage = os.path.expanduser('~/carpool/pictures')
 if not os.path.exists(storage):
     os.makedirs(storage)
 cam = cv2.VideoCapture(0)
