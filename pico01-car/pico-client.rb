@@ -3,6 +3,11 @@
 
 require 'socket'
 require 'machine'
+require 'wifi'
+
+# WiFi設定
+WIFI_SSID = "Your_SSID"
+WIFI_PASSWORD = "Your_Password"
 
 # ピン設定
 ANALOG_PIN_1 = 26      # ADC0 (アナログ入力1)
@@ -21,6 +26,36 @@ motor2 = GPIO.new(OUTPUT_PIN_2, GPIO::OUT)
 led.write(0)
 motor1.write(0)
 motor2.write(0)
+
+puts "Connecting to WiFi..."
+
+# WiFiに接続
+wifi = WiFi.new
+wifi.connect(WIFI_SSID, WIFI_PASSWORD)
+
+# 接続待機（最大10秒）
+10.times do
+  if wifi.connected?
+    break
+  end
+  puts "Waiting for WiFi connection..."
+  sleep 1
+end
+
+# WiFi接続確認
+unless wifi.connected?
+  puts "WiFi connection failed"
+  # LED点滅でエラー表示
+  10.times do
+    led.write(1)
+    sleep 0.2
+    led.write(0)
+    sleep 0.2
+  end
+  raise "WiFi connection failed"
+end
+
+puts "Connected to WiFi: #{wifi.ip_address}"
 
 puts "Connecting to raspi24.local:2000..."
 

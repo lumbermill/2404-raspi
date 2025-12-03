@@ -22,17 +22,16 @@ Raspberry Pi Picoからraspi24.local:2000のTCPサーバに接続し、アナロ
 
 ## PicoRuby版 (pico-client.rb)
 
+
 ```bash
-# Picoにコピーして実行
-picorb pico-client.rb
+# Picoにコピー
+picorb put pico-client.rb main.rb
 ```
 
 ## MicroPython版 (pico-client.py)
 
 ```bash
-# Picoにコピーして実行
-mpremote run pico-client.py
-# または main.py としてコピーして自動起動
+# Picoにコピー
 mpremote cp pico-client.py :main.py
 ```
 

@@ -3,7 +3,12 @@
 
 import socket
 import time
+import network
 from machine import Pin, ADC
+
+# WiFi設定
+WIFI_SSID = "Your_SSID"
+WIFI_PASSWORD = "Your_Password"
 
 # ピン設定
 ANALOG_PIN_1 = 26      # ADC0 (アナログ入力1)
@@ -22,6 +27,35 @@ motor2 = Pin(OUTPUT_PIN_2, Pin.OUT)
 led.value(0)
 motor1.value(0)
 motor2.value(0)
+
+print("Connecting to WiFi...")
+
+# WiFiに接続
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(WIFI_SSID, WIFI_PASSWORD)
+
+# 接続待機（最大10秒）
+max_wait = 10
+while max_wait > 0:
+    if wlan.status() < 0 or wlan.status() >= 3:
+        break
+    max_wait -= 1
+    print('Waiting for WiFi connection...')
+    time.sleep(1)
+
+# WiFi接続確認
+if wlan.status() != 3:
+    print('WiFi connection failed')
+    # LED点滅でエラー表示
+    for _ in range(10):
+        led.value(1)
+        time.sleep(0.2)
+        led.value(0)
+        time.sleep(0.2)
+    raise RuntimeError('WiFi connection failed')
+
+print(f'Connected to WiFi: {wlan.ifconfig()[0]}')
 
 print("Connecting to raspi24.local:2000...")
 
