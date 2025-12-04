@@ -2,14 +2,13 @@
 
 <%= render @room %>
 
+<div>
+  <%= link_to "Edit this room", edit_room_path(@room), class: "btn btn-light" %>
+  <%= link_to "Back to rooms", rooms_path, class: "btn btn-light" %>
+  <%= button_to "Destroy this room", @room, method: :delete, class: "btn btn-danger mt-2" %>
+</div>
+
 <p>How to update the occupation of a room using curl:</p>
 <pre>
 curl http://<%= request.server_name %>:3000/rooms/update-occupation -XGET -d 'name=<%= @room.name %>&occupied=true'
 </pre>
-
-<div>
-  <%= link_to "Edit this room", edit_room_path(@room), class: "btn btn-light" %>
-  <%= link_to "Back to rooms", rooms_path, class: "btn btn-light" %>
-
-  <%= button_to "Destroy this room", @room, method: :delete, class: "btn btn-danger mt-2" %>
-</div>

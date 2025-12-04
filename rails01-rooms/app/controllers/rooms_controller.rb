@@ -1,12 +1,12 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: %i[ show edit update destroy ]
 
-  # GET /rooms
+  # GET /rooms or /rooms.json
   def index
     @rooms = Room.all
   end
 
-  # GET /rooms/1
+  # GET /rooms/1 or /rooms/1.json
   def show
   end
 
@@ -19,30 +19,42 @@ class RoomsController < ApplicationController
   def edit
   end
 
-  # POST /rooms
+  # POST /rooms or /rooms.json
   def create
     @room = Room.new(room_params)
 
-    if @room.save
-      redirect_to @room, notice: "Room was successfully created."
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @room.save
+        format.html { redirect_to @room, notice: "Room was successfully created." }
+        format.json { render :show, status: :created, location: @room }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @room.errors, status: :unprocessable_entity }
+      end
     end
   end
 
-  # PATCH/PUT /rooms/1
+  # PATCH/PUT /rooms/1 or /rooms/1.json
   def update
-    if @room.update(room_params)
-      redirect_to @room, notice: "Room was successfully updated.", status: :see_other
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @room.update(room_params)
+        format.html { redirect_to @room, notice: "Room was successfully updated.", status: :see_other }
+        format.json { render :show, status: :ok, location: @room }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @room.errors, status: :unprocessable_entity }
+      end
     end
   end
 
-  # DELETE /rooms/1
+  # DELETE /rooms/1 or /rooms/1.json
   def destroy
     @room.destroy!
-    redirect_to rooms_url, notice: "Room was successfully destroyed.", status: :see_other
+
+    respond_to do |format|
+      format.html { redirect_to rooms_path, notice: "Room was successfully destroyed.", status: :see_other }
+      format.json { head :no_content }
+    end
   end
 
   def update_occupation
@@ -57,16 +69,17 @@ class RoomsController < ApplicationController
     r.occupied = occupied
     r.save!
     render plain: "accepted\n"
+    ActionCable.server.broadcast "notification_channel", {content: r}
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room
-      @room = Room.find(params[:id])
+      @room = Room.find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.
     def room_params
-      params.require(:room).permit(:name, :occupied)
+      params.expect(room: [ :name, :occupied ])
     end
 end
