@@ -1,5 +1,4 @@
 # Raspberry Pi Pico用 MicroPythonクライアント
-# サーバ: raspi24.local:2000
 
 import socket
 import time
@@ -7,8 +6,10 @@ import network
 from machine import Pin, ADC
 
 # WiFi設定
-WIFI_SSID = "Your_SSID"
-WIFI_PASSWORD = "Your_Password"
+WIFI_SSID = "360-tachibana"
+WIFI_PASSWORD = ""
+HOST = 'raspi24.local'
+PORT = 2000
 
 # ピン設定
 ANALOG_PIN_1 = 26      # ADC0 (アナログ入力1)
@@ -18,15 +19,6 @@ OUTPUT_PIN_2 = 17      # モーター2制御用
 
 # ピンの初期化
 led = Pin("LED", Pin.OUT)  # Pico W組み込みLED
-adc1 = ADC(Pin(ANALOG_PIN_1))
-adc2 = ADC(Pin(ANALOG_PIN_2))
-motor1 = Pin(OUTPUT_PIN_1, Pin.OUT)
-motor2 = Pin(OUTPUT_PIN_2, Pin.OUT)
-
-# 初期状態
-led.value(0)
-motor1.value(0)
-motor2.value(0)
 
 print("Connecting to WiFi...")
 
@@ -35,38 +27,38 @@ wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect(WIFI_SSID, WIFI_PASSWORD)
 
-# 接続待機（最大10秒）
-max_wait = 10
-while max_wait > 0:
-    if wlan.status() < 0 or wlan.status() >= 3:
-        break
-    max_wait -= 1
-    print('Waiting for WiFi connection...')
-    time.sleep(1)
-
-# WiFi接続確認
-if wlan.status() != 3:
-    print('WiFi connection failed')
-    # LED点滅でエラー表示
-    for _ in range(10):
+while wlan.isconnected() == False:
+    print("connecting to %s.." % (WIFI_SSID))
+    # LED点滅
+    for _ in range(2):
         led.value(1)
-        time.sleep(0.2)
+        time.sleep(0.25)
         led.value(0)
-        time.sleep(0.2)
-    raise RuntimeError('WiFi connection failed')
+        time.sleep(0.25)
 
-print(f'Connected to WiFi: {wlan.ifconfig()[0]}')
+wlan_status = wlan.ifconfig()
+print("connected! as %s" % (wlan_status[0]))
 
-print("Connecting to raspi24.local:2000...")
+# センサーとモーター用ピンの初期化
+adc1 = ADC(Pin(ANALOG_PIN_1))
+adc2 = ADC(Pin(ANALOG_PIN_2))
+motor1 = Pin(OUTPUT_PIN_1, Pin.OUT)
+motor2 = Pin(OUTPUT_PIN_2, Pin.OUT)
+
+# 初期状態
+motor1.value(0)
+motor2.value(0)
+
+print("Connecting to %s:%d..." % (HOST, PORT))
 
 try:
     # サーバに接続
     sock = socket.socket()
-    sock.connect(socket.getaddrinfo('raspi24.local', 2000)[0][-1])
+    sock.connect(socket.getaddrinfo(HOST, PORT)[0][-1])
     
     # 接続成功: LEDを点灯
     led.value(1)
-    print("Connected! LED ON")
+    print("Connected!")
     
     # メインループ
     while True:

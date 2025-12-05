@@ -1,0 +1,10 @@
+
+
+
+desc 'Install'
+task :install do
+  system("mpremote cp pico-client.py :main.py")
+end
+
+
+task :default => [:install]
